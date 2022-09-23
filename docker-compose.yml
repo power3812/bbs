@@ -1,0 +1,40 @@
+version: '3'
+services:
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: ./Dockerfile
+  #   ports:
+  #     - 9000:3000
+  #   working_dir: /workspace
+  #   volumes:
+  #     - ./frontend/src:/workspace
+  #   command: yarn dev
+  #   tty: true
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ./Dockerfile
+    ports:
+      - 5000:5000
+    volumes:
+      - ./backend:/backend
+    tty: true
+    environment:
+      - TZ="Asia/Tokyo"
+  bbs_db:
+    image: mysql:5.7
+    container_name: mysql
+    volumes:
+      - ./mysql/conf:/etc/mysql/conf.d
+      - ./mysql/data:/var/lib/mysql
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --default-time-zone=Asia/Tokyo
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_USER=bbs
+      - MYSQL_PASSWORD=password
+      - MYSQL_DATABASE=bbs
+      - MYSQL_ROOT_PASSWORD=password
+      - TZ="Asia/Tokyo"
